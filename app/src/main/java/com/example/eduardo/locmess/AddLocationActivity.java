@@ -45,12 +45,6 @@ public class AddLocationActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        gps.stopUsingGPS();
-    }
-
     public void getCoordinates(){
         gps = new TrackGPS(AddLocationActivity.this);
 

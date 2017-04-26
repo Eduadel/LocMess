@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         actionBar = getSupportActionBar();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationBar);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
