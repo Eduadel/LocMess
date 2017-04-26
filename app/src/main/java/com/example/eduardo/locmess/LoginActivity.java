@@ -1,34 +1,36 @@
 package com.example.eduardo.locmess;
 
-        import android.app.ProgressDialog;
-        import android.os.Bundle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.util.Log;
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
-        import android.content.Intent;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.TextView;
-        import android.widget.Toast;
-
-        import butterknife.ButterKnife;
-        import butterknife.BindView;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    @BindView(R.id.input_email) EditText _emailText;
-    @BindView(R.id.input_password) EditText _passwordText;
-    @BindView(R.id.btn_login) Button _loginButton;
-    @BindView(R.id.link_signup) TextView _signupLink;
+    Button _loginButton;
+    EditText _emailText;
+    EditText _passwordText;
+    TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+
+
+        _loginButton  = (Button) findViewById(R.id.btn_login);
+        _emailText = (EditText) findViewById(R.id.input_email);
+         _passwordText = (EditText) findViewById(R.id.input_password);
+         _signupLink = (TextView) findViewById(R.id.link_signup);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -103,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
