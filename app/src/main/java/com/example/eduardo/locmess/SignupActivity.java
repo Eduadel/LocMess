@@ -30,6 +30,7 @@ public class SignupActivity extends AppCompatActivity {
         _nameText = (EditText) findViewById(R.id.input_name);
         _emailText = (EditText) findViewById(R.id.input_email);
         _clubText = (EditText) findViewById(R.id.input_club);
+
         _passwordText = (EditText) findViewById(R.id.input_password);
         _loginLink = (TextView) findViewById(R.id.link_login);
 
