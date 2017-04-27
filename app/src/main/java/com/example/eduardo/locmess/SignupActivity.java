@@ -16,6 +16,7 @@ public class SignupActivity extends AppCompatActivity {
     Button _signupButton;
     EditText _nameText;
     EditText _emailText;
+    EditText _clubText;
     EditText _passwordText;
     TextView _loginLink;
 
@@ -25,11 +26,12 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         //ButterKnife.bind(this);
 
-         _signupButton  = (Button) findViewById(R.id.btn_signup);
-         _nameText = (EditText) findViewById(R.id.input_name);
-         _emailText = (EditText) findViewById(R.id.input_email);
-         _passwordText = (EditText) findViewById(R.id.input_password);
-         _loginLink = (TextView) findViewById(R.id.link_login);
+        _signupButton  = (Button) findViewById(R.id.btn_signup);
+        _nameText = (EditText) findViewById(R.id.input_name);
+        _emailText = (EditText) findViewById(R.id.input_email);
+        _clubText = (EditText) findViewById(R.id.input_club);
+        _passwordText = (EditText) findViewById(R.id.input_password);
+        _loginLink = (TextView) findViewById(R.id.link_login);
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +68,7 @@ public class SignupActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        String club = _clubText.getText().toString();
 
         // TODO: Implement your own signup logic here.
 
@@ -100,6 +103,7 @@ public class SignupActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        String club = _clubText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
             _nameText.setError("at least 3 characters");
@@ -120,6 +124,13 @@ public class SignupActivity extends AppCompatActivity {
             valid = false;
         } else {
             _passwordText.setError(null);
+        }
+
+        if (club.isEmpty() || club.length() < 3) {
+            _clubText.setError("at least 3 characters");
+            valid = false;
+        } else {
+            _clubText.setError(null);
         }
 
         return valid;
