@@ -71,5 +71,6 @@ public class AddLocationActivity extends AppCompatActivity {
     public void SaveLocation(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }
