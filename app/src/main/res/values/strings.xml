@@ -15,9 +15,12 @@
     <string name="title_activity_add_location">Add Location</string>
     <string name="gps">Gps Coordinates</string>
     <string name="local">Location Name</string>
+    <string name="local_gps">GPS Location</string>
+    <string name="local_ssid">SSID Location</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="btn_Gps">Get Gps Coordinates</string>
+    <string name="btn_SSID">Get SSID Name</string>
     <string name="btn_SaveLoca">Save Location</string>
     <string name="btn_EditLoca">Save Edition</string>
 </resources>

@@ -1,17 +1,9 @@
 package com.example.eduardo.locmess;
 
-import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+
+import static com.example.eduardo.locmess.R.id.parent;
 
 
 public class LocationFragment extends Fragment {
@@ -34,7 +26,8 @@ public class LocationFragment extends Fragment {
     String[] teste = {"Almada", "Lisboa", "Oeiras", "Cacém", "Loures", "Setúbal", "Corroios", "Seixal", "Costa da Caparica", "Sesimbra", "Faro", "Coimbra", "Leiria"};
 
 
-    FloatingActionButton fab;
+    private FloatingActionButton fgps, fssid;
+    private FloatingActionMenu fab;
     double longitude;
     double latitude;
     private TrackGPS gps;
@@ -52,13 +45,20 @@ public class LocationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_location, container, false);
 
         //Floating Action Button Action
-        fab = (FloatingActionButton) rootView.findViewById(R.id.locatAdd);
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(getActivity(), AddLocationActivity.class);
-                startActivity(intent);
+        fgps = (FloatingActionButton) rootView.findViewById(R.id.fabgps);
+        fssid = (FloatingActionButton) rootView.findViewById(R.id.fabssid);
+        fab = (FloatingActionMenu) rootView.findViewById(R.id.locatAdd);
 
+        //handling each floating action button clicked
+        fgps.setOnClickListener(onButtonClick());
+        fssid.setOnClickListener(onButtonClick());
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fab.isOpened()) {
+                    fab.close(true);
+                }
             }
         });
 
@@ -89,6 +89,24 @@ public class LocationFragment extends Fragment {
 
         return rootView;
     }
+
+    private View.OnClickListener onButtonClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view == fgps) {
+                    Intent intent = new Intent(getActivity(), AddLocationActivity.class);
+                    startActivity(intent);
+                } else if (view == fssid) {
+                    Intent intent = new Intent(getActivity(), AddSSIDLocationActivity.class);
+                    startActivity(intent);
+                }
+                fab.close(true);
+            }
+        };
+    }
+
+
 
     //ActionBar Icons
     @Override

@@ -24,10 +24,6 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Created by ANQ on 8/8/2016.
- */
-
 public class TrackGPS extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
