@@ -12,16 +12,16 @@
     <ListView
         android:id="@+id/locationListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="match_parent"></ListView>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/locatAdd"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="145dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         fab:menu_backgroundColor="#ccffffff"
         fab:menu_fab_label="Choose an action"
         fab:fab_colorNormal="#DA4336"

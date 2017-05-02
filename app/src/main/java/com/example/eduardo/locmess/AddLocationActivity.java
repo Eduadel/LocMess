@@ -17,8 +17,7 @@ public class AddLocationActivity extends AppCompatActivity {
 
     double longitude;
     double latitude;
-    Button btn_get;
-    Button btn_save;
+    Button btn_get, btn_save;
     private TrackGPS gps;
 
     @Override
