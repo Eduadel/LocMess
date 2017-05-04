@@ -2,6 +2,7 @@ package com.example.eduardo.locmess;
 
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -20,21 +21,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class AddSSIDLocationActivity extends Activity implements View.OnClickListener {
+public class AddSSIDLocationActivity extends AppCompatActivity implements View.OnClickListener {
 
     WifiManager wifi;
     ListView lv;
-    TextView txtSSID;
+    EditText txtSSID;
     Button btn_scan, btn_save;
     int size = 0;
     List<ScanResult> results;
-
     String ITEM_KEY = "key";
     ArrayList<HashMap<String, String>> arraylist = new ArrayList<HashMap<String, String>>();
     SimpleAdapter adapter;
@@ -44,9 +45,9 @@ public class AddSSIDLocationActivity extends Activity implements View.OnClickLis
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ssidlocation);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        txtSSID = (TextView) findViewById(R.id.txtSSID);
+        txtSSID = (EditText) findViewById(R.id.txtSSID);
         btn_scan = (Button) findViewById(R.id.btn_Scan);
         btn_scan.setOnClickListener(this);
         btn_save = (Button) findViewById(R.id.btnSaveSSID);

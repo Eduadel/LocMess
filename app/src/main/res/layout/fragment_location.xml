@@ -23,7 +23,7 @@
         android:layout_gravity="bottom|right"
         android:paddingBottom="@dimen/activity_horizontal_margin"
         fab:menu_backgroundColor="#ccffffff"
-        fab:menu_fab_label="Choose an action"
+        fab:menu_fab_label="Choose"
         fab:fab_colorNormal="#DA4336"
         fab:fab_colorPressed="#E75043"
         fab:fab_colorRipple="#99FFFFFF"
