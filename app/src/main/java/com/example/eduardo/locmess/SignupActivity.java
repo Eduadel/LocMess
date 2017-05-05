@@ -94,6 +94,10 @@ public class SignupActivity extends AppCompatActivity {
 
     public void signup() {
         Log.d(TAG, "Signup");
+        final String name = _nameText.getText().toString().trim();
+        final String email = _emailText.getText().toString().trim();
+        final String password = _passwordText.getText().toString().trim();
+        final String topics = _clubText.getText().toString().trim();
 
         if (!validate()) {
             onSignupFailed();
@@ -108,20 +112,16 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString().trim();
-        String email = _emailText.getText().toString().trim();
-        String password = _passwordText.getText().toString().trim();
-        String topics = _clubText.getText().toString().trim();
 
-        // TODO: Implement your own signup logic here.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        registerUser(name, email, password, topics);
+                        //onSignupSuccess();
+                        //onSignupFailed();
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -205,15 +205,14 @@ public class SignupActivity extends AppCompatActivity {
                     if (!error) {
                         // User successfully stored in MySQL
                         // Now store the user in sqlite
-                        String uid = jObj.getString("email");
+                        //String uid = jObj.getString("email");
 
                         JSONObject user = jObj.getJSONObject("user");
                         String username = user.getString("username");
                         String password = user.getString("password");
                         String email = user.getString("email");
                         String topics = user.getString("inte_topics");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
 
                         // Inserting row in users table
                         db.addUser(username, password , email, topics, created_at);
