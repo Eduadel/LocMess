@@ -114,8 +114,8 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        checkLogin(email, password);
-                        //onLoginSuccess();
+                        //checkLogin(email, password);
+                        onLoginSuccess();
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }

@@ -37,6 +37,7 @@ public class TrackGPS extends Service implements LocationListener {
     Location loc;
     double latitude;
     double longitude;
+    float radius;
 
     public TrackGPS(Context mContext) {
         this.mContext = mContext;
@@ -72,14 +73,14 @@ public class TrackGPS extends Service implements LocationListener {
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                         Log.d("Network", "Network");
                         if (locationManager != null) {
-                            loc = locationManager
-                                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                         }
 
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+                            radius = loc.getAccuracy();
                         }
                     }
                     catch(SecurityException e){
@@ -103,6 +104,7 @@ public class TrackGPS extends Service implements LocationListener {
                             if (loc != null) {
                                 latitude = loc.getLatitude();
                                 longitude = loc.getLongitude();
+                                radius = loc.getAccuracy();
                             }
                         }
                     } catch (SecurityException e) {
@@ -132,6 +134,12 @@ public class TrackGPS extends Service implements LocationListener {
         return latitude;
     }
 
+    public float getAccuracy() {
+        if (loc != null) {
+            radius = loc.getAccuracy();
+        }
+        return radius;
+    }
     public boolean canGetLocation() {
         return this.canGetLocation;
     }

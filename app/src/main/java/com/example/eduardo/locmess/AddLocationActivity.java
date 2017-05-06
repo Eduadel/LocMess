@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ public class AddLocationActivity extends AppCompatActivity {
 
     double longitude;
     double latitude;
+    float radius;
     Button btn_get, btn_save;
     private TrackGPS gps;
 
@@ -50,10 +52,14 @@ public class AddLocationActivity extends AppCompatActivity {
         if(gps.canGetLocation()){
 
             longitude = gps.getLongitude();
-            latitude = gps .getLatitude();
+            latitude = gps.getLatitude();
+            radius = gps.getAccuracy();
 
-            TextView viewGps = (TextView) findViewById(R.id.vwGpsCoor);
+            EditText viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
+            EditText viewGps = (EditText) findViewById(R.id.vwGpsCoor);
+
             viewGps.setText("\nLongitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
+            viewRadius.setText(Double.toString(radius));
         }
         else
         {

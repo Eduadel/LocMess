@@ -25,17 +25,34 @@
                 android:id="@+id/txtLocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/local"
-                android:inputType="textEmailAddress" />
+                android:hint="@string/local" />
         </android.support.design.widget.TextInputLayout>
 
-        <TextView android:id="@+id/vwGpsCoor"
-            android:layout_width="fill_parent"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="@string/gps"
-            android:textSize="16dip"/>
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/vwGpsCoor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/gps"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/vwGpsRadius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/radius"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnGetPos"
