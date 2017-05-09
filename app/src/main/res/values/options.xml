@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_options">Options</string>
+    <string-array name="types">
+        <item>Include</item>
+        <item>Exclude</item>
+    </string-array>
+</resources>
