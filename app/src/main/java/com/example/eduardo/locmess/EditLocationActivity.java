@@ -5,17 +5,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    double longitude;
-    double latitude;
-    Button btn_pos;
-    Button btn_edit;
+    double longitude, latitude;
+    float radius;
+    Button btn_pos, btn_edit;
+    EditText local, viewRadius, viewGps, txtSSID;
     private TrackGPS gps;
+    DBHandler db = new DBHandler(this);
+    String loc,GPS,RADIUS,SSID;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +32,10 @@ public class EditLocationActivity extends AppCompatActivity {
 
         String val = getIntent().getExtras().getString("Local");
 
-        TextView txtEdit = (TextView) findViewById(R.id.txtLocal);
+        local = (EditText) findViewById(R.id.txtLocal);
+        txtSSID = (EditText) findViewById(R.id.txtSSID);
 
-        txtEdit.setText(val);
+        local.setText(val);
 
         btn_pos = (Button) findViewById(R.id.btnGetPos);
         btn_edit = (Button) findViewById(R.id.btnSaveEdit);
@@ -53,10 +61,14 @@ public class EditLocationActivity extends AppCompatActivity {
         if(gps.canGetLocation()){
 
             longitude = gps.getLongitude();
-            latitude = gps .getLatitude();
+            latitude = gps.getLatitude();
+            radius = gps.getAccuracy();
 
-            TextView viewGps = (TextView) findViewById(R.id.vwGpsCoor);
+            viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
+            viewGps = (EditText) findViewById(R.id.vwGpsCoor);
+
             viewGps.setText("\nLongitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
+            viewRadius.setText(Double.toString(radius) + " m");
         }
         else
         {
@@ -64,9 +76,23 @@ public class EditLocationActivity extends AppCompatActivity {
         }
 
     }
+
     public void SaveLocation(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+
+        id = getIntent().getExtras().getInt("Local");
+        loc = local.getText().toString();
+        SSID = txtSSID.getText().toString();
+        GPS = viewGps.getText().toString();
+        RADIUS = viewRadius.getText().toString();
+        if(db.updateLocal(id, loc, GPS, RADIUS, SSID)) {
+            Toast.makeText(getApplicationContext(), "Local Update Successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Local Update Failed", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

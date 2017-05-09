@@ -15,16 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.eduardo.locmess.helper.SQLiteHandler;
-import com.example.eduardo.locmess.helper.SessionManager;
-
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     ActionBar actionBar;
-    private SQLiteHandler db;
-    private SessionManager session;
+    BottomNavigationView navigation;
+    FragmentTransaction transaction;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -60,45 +56,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         actionBar = getSupportActionBar();
 
-        // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if (!session.isLoggedIn()) {
-            //logoutUser();
-        }
-
-        /*
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        String name = user.get("name");
-        String email = user.get("email");
-
-        // Displaying the user details on the screen
-        txtName.setText(name);
-        txtEmail.setText(email);*/
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationBar);
+        navigation = (BottomNavigationView) findViewById(R.id.navigationBar);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, LocationFragment.newInstance());
         transaction.commit();
         statusCheck();
-
-        // Logout button click event
-        /*btnLogout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-            }
-        });*/
 
     }
     //Location Check

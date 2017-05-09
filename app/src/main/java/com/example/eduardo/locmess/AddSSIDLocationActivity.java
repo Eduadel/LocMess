@@ -2,29 +2,26 @@ package com.example.eduardo.locmess;
 
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -32,13 +29,16 @@ public class AddSSIDLocationActivity extends AppCompatActivity implements View.O
 
     WifiManager wifi;
     ListView lv;
-    EditText txtSSID;
+    EditText txtSSID, local;
     Button btn_scan, btn_save;
     int size = 0;
     List<ScanResult> results;
     String ITEM_KEY = "key";
+    String loc, SSID;
     ArrayList<HashMap<String, String>> arraylist = new ArrayList<HashMap<String, String>>();
     SimpleAdapter adapter;
+
+    DBHandler db = new DBHandler(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -47,6 +47,7 @@ public class AddSSIDLocationActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_add_ssidlocation);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        local = (EditText) findViewById(R.id.txtLocal);
         txtSSID = (EditText) findViewById(R.id.txtSSID);
         btn_scan = (Button) findViewById(R.id.btn_Scan);
         btn_scan.setOnClickListener(this);
@@ -113,8 +114,17 @@ public class AddSSIDLocationActivity extends AppCompatActivity implements View.O
     }
 
     public void SaveLocation(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+
+        loc = local.getText().toString();
+        SSID = txtSSID.getText().toString();
+        if(db.addLocalSSID(loc,SSID)) {
+            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Could not Insert Local", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -1,9 +1,14 @@
 package com.example.eduardo.locmess;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,24 +18,34 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.eduardo.locmess.R.id.parent;
 
 
 public class LocationFragment extends Fragment {
 
-    String[] teste = {"Almada", "Lisboa", "Oeiras", "Cacém", "Loures", "Setúbal", "Corroios", "Seixal", "Costa da Caparica", "Sesimbra", "Faro", "Coimbra", "Leiria"};
-
-
     private FloatingActionButton fgps, fssid;
     private FloatingActionMenu fab;
-    double longitude;
-    double latitude;
-    private TrackGPS gps;
+    ArrayList<String> listItems = new ArrayList<String>();
+    ArrayAdapter adapter;
+    ListView lv;
+    int posit;
+    int toRemove;
+    DBHandler db;
 
     public static LocationFragment newInstance() {
         LocationFragment fragment = new LocationFragment();
@@ -49,7 +64,7 @@ public class LocationFragment extends Fragment {
         fssid = (FloatingActionButton) rootView.findViewById(R.id.fabssid);
         fab = (FloatingActionMenu) rootView.findViewById(R.id.locatAdd);
 
-        //handling each floating action button clicked
+        //Handling each floating action button clicked
         fgps.setOnClickListener(onButtonClick());
         fssid.setOnClickListener(onButtonClick());
 
@@ -62,9 +77,22 @@ public class LocationFragment extends Fragment {
             }
         });
 
-        final ListView lv = (ListView) rootView.findViewById(R.id.locationListView);
-        ArrayAdapter adapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_list_item_1, teste);
-        lv.setAdapter(adapter);
+        db = new DBHandler(getActivity());
+
+        final Cursor cursor = db.getAllLocals();
+        String [] columns = new String[] {
+                db.KEY_ID,
+                db.KEY_LOCAL
+        };
+        int [] widgets = new int[] {
+                R.id.local_id,
+                R.id.local_name
+        };
+
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getActivity(), R.layout.item_layout,
+                cursor, columns, widgets, 0);
+        lv = (ListView) rootView.findViewById(R.id.locationListView);
+        lv.setAdapter(cursorAdapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,15 +101,13 @@ public class LocationFragment extends Fragment {
                 String listItem = (String)lv.getItemAtPosition(position);
                 intent.putExtra("Local", listItem);
                 startActivity(intent);
-
-                //Toast.makeText(getActivity(), "Escolheu " + position, Toast.LENGTH_SHORT).show();
             }
         });
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //Log.v("long clicked", "pos:" + position);
+                posit = position;
                 setHasOptionsMenu(true);//ActionBar Icons Actions
                 return true;
             }
@@ -106,8 +132,6 @@ public class LocationFragment extends Fragment {
         };
     }
 
-
-
     //ActionBar Icons
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -119,11 +143,24 @@ public class LocationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-
+                toRemove = posit;
+                AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
+                adb.setTitle("Delete?");
+                adb.setMessage("Are you sure you want to delete ?");
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                     public void onClick(DialogInterface dialog, int id) {
+                                db.deleteLocal(toRemove);
+                                Toast.makeText(getActivity().getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        });
+                adb.show();
+                setHasOptionsMenu(false);
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }

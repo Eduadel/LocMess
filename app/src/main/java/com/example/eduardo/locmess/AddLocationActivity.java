@@ -1,35 +1,41 @@
 package com.example.eduardo.locmess;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 public class AddLocationActivity extends AppCompatActivity {
 
-    double longitude;
-    double latitude;
+    double longitude, latitude;
     float radius;
     Button btn_get, btn_save;
+    EditText local, viewRadius, viewGps;
     private TrackGPS gps;
+
+    String loc, GPS, RADIUS;
+
+    DBHandler db = new DBHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        local = (EditText) findViewById(R.id.txtLocal);
 
         btn_get = (Button) findViewById(R.id.btnGetPos);
         btn_save = (Button) findViewById(R.id.btnSavePos);
+
 
         btn_get.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,11 +61,11 @@ public class AddLocationActivity extends AppCompatActivity {
             latitude = gps.getLatitude();
             radius = gps.getAccuracy();
 
-            EditText viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
-            EditText viewGps = (EditText) findViewById(R.id.vwGpsCoor);
+            viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
+            viewGps = (EditText) findViewById(R.id.vwGpsCoor);
 
             viewGps.setText("\nLongitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
-            viewRadius.setText(Double.toString(radius));
+            viewRadius.setText(Double.toString(radius) + " m");
         }
         else
         {
@@ -68,8 +74,18 @@ public class AddLocationActivity extends AppCompatActivity {
 
     }
     public void SaveLocation(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+
+        loc = local.getText().toString();
+        GPS = viewGps.getText().toString();
+        RADIUS = viewRadius.getText().toString();
+        if(db.addLocal(loc,GPS,RADIUS)) {
+            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Could not Insert Local", Toast.LENGTH_SHORT).show();
+        }
     }
 }
