@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.eduardo.locmess.CreateMessage">
+
+    <ScrollView
+        android:id="@+id/p_1"
+        android:layout_width="0dp"
+        android:layout_height="587dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/p_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="386dp"
+                android:layout_height="wrap_content"
+                android:text="Location:"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintTop_creator="1" />
+
+            <Spinner
+                android:id="@+id/location_spinner"
+                android:layout_width="386dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintTop_creator="1" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Choose Users:"
+                android:paddingTop="15dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/location_spinner"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintTop_creator="1" />
+
+            <LinearLayout
+                android:id="@+id/parent_linear_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/child_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/requirement_edit_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:inputType="text" />
+
+                    <Spinner
+                        android:id="@+id/type_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:entries="@array/types"
+                        android:gravity="right" />
+
+                    <Button
+                        android:id="@+id/delete_button"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@android:drawable/ic_delete"
+                        android:onClick="onDelete" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/add_field_button"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#555"
+                    android:onClick="onAddField"
+                    android:paddingLeft="5dp"
+                    android:text="Add"
+                    android:textColor="#FFF" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:text="Time Window:"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/parent_linear_layout"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1" />
+
+            <LinearLayout
+                android:id="@+id/start_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1">
+
+                <Button
+                    android:id="@+id/start_date"
+                    android:layout_width="88dp"
+                    android:layout_height="48dp"
+                    android:text="DATE"
+                    app:layout_constraintLeft_toRightOf="@+id/start_hour"
+                    tools:layout_constraintTop_creator="1" />
+
+                <Button
+                    android:id="@+id/start_hour"
+                    android:layout_width="88dp"
+                    android:layout_height="48dp"
+                    android:text="HOUR"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintLeft_creator="1" />
+
+                <TextView
+                    android:id="@+id/start_date_view"
+                    android:layout_width="180dp"
+                    android:layout_height="21dp"
+                    android:layout_marginLeft="30dp"
+                    android:text="Date of start"
+                    android:textSize="15sp"
+                    app:layout_constraintLeft_toRightOf="@+id/start_date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/end_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_linear_layout"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1">
+
+                <Button
+                    android:id="@+id/end_date"
+                    android:layout_width="88dp"
+                    android:layout_height="48dp"
+                    android:text="DATE"
+                    app:layout_constraintLeft_toRightOf="@+id/start_hour"
+                    tools:layout_constraintTop_creator="1" />
+
+                <Button
+                    android:id="@+id/end_hour"
+                    android:layout_width="88dp"
+                    android:layout_height="48dp"
+                    android:text="HOUR"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintLeft_creator="1" />
+
+                <TextView
+                    android:id="@+id/end_date_view"
+                    android:layout_width="180dp"
+                    android:layout_height="21dp"
+                    android:layout_marginLeft="30dp"
+                    android:text="Date of end"
+                    android:textSize="15sp"
+                    app:layout_constraintLeft_toRightOf="@+id/start_date" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:text="Contact:"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_linear_layout"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1" />
+
+            <EditText
+                android:id="@+id/contact_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:inputType="phone"
+                android:text="Phone number"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView9"
+                tools:text="Phone number" />
+
+            <EditText
+                android:id="@+id/contact_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:inputType="textEmailAddress"
+                android:paddingTop="10dp"
+                android:text="E-Mail"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contact_phone"
+                tools:text="E-Mail"
+                android:layout_marginTop="1dp" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:text="Content:"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contact_email"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1" />
+
+            <EditText
+                android:id="@+id/editMessage"
+                android:layout_width="393dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="Write here you message..."
+                app:layout_constraintTop_toBottomOf="@+id/textView18"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:inputType="textMultiLine" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:text="Send message directly to other users"
+                android:gravity="left"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editMessage" />
+
+            <Button
+                android:id="@+id/send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkBox"
+                android:gravity="center"
+                android:background="#500"
+                android:textColor="#FFF"
+                android:text="SEND" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+
+</android.support.constraint.ConstraintLayout>
