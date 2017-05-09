@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".app.AppController"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -62,7 +63,10 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".AddSSIDLocationActivity"></activity>
+        <activity android:name=".AddSSIDLocationActivity" />
+        <activity android:name=".CreateMessage"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ShowMessage"></activity>
     </application>
 
 </manifest>

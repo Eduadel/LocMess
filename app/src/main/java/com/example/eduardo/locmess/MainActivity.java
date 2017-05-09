@@ -109,4 +109,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }*/
+
+     private boolean checkIfArraysCreated() {
+        String[] test_file_key = {"sent_server", "sent_local", "received"};
+        int n=0;
+
+        for (String s: test_file_key) {
+            String path = getFilesDir().getAbsolutePath() + "/" + s;
+            File file = new File(path);
+            if (file.exists()) {n++;}
+        }
+
+        if(n==3){return true;}
+        else {return false;}
+
+    }
+
+    public void createSRArray () {
+        List<PinMessage> sent_server = new ArrayList<PinMessage>();
+        List<PinMessage> sent_local = new ArrayList<PinMessage>();
+        List<PinMessage> received = new ArrayList<PinMessage>();
+        try {
+            // Save the list of entries to internal storage
+            InternalStorage.writeObject(this, "sent_server", sent_server);
+            InternalStorage.writeObject(this, "sent_local", sent_local);
+            InternalStorage.writeObject(this, "received", received);
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
 }
