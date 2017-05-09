@@ -12,12 +12,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.eduardo.locmess.helper.SQLiteHandler;
 import com.example.eduardo.locmess.helper.SessionManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
     private SQLiteHandler db;
     private SessionManager session;
+    private static final String TAG = "MainActivity";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -90,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frame_layout, LocationFragment.newInstance());
         transaction.commit();
         statusCheck();
+        
+        if (!checkIfArraysCreated()) {createSRArray();}
 
         // Logout button click event
         /*btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -143,4 +150,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }*/
+    
+     private boolean checkIfArraysCreated() {
+        String[] test_file_key = {"sent_server", "sent_local", "received"};
+        int n=0;
+
+        for (String s: test_file_key) {
+            String path = getFilesDir().getAbsolutePath() + "/" + s;
+            File file = new File(path);
+            if (file.exists()) {n++;}
+        }
+
+        if(n==3){return true;}
+        else {return false;}
+
+    }
+
+    public void createSRArray () {
+        List<PinMessage> sent_server = new ArrayList<PinMessage>();
+        List<PinMessage> sent_local = new ArrayList<PinMessage>();
+        List<PinMessage> received = new ArrayList<PinMessage>();
+        try {
+            // Save the list of entries to internal storage
+            InternalStorage.writeObject(this, "sent_server", sent_server);
+            InternalStorage.writeObject(this, "sent_local", sent_local);
+            InternalStorage.writeObject(this, "received", received);
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
 }
