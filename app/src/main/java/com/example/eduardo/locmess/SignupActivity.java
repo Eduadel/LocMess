@@ -34,6 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText _clubText;
     EditText _passwordText;
     TextView _loginLink;
+    DBHandler db = new DBHandler(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,8 +95,14 @@ public class SignupActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
-                        //onSignupFailed();
+                        if(db.addUser(name,password,email,topics)) {
+                            Toast.makeText(getApplicationContext(), "User Inserted", Toast.LENGTH_SHORT).show();
+                            onSignupSuccess();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Could not Insert User", Toast.LENGTH_SHORT).show();
+                            onSignupFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -105,6 +112,8 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
         finish();
     }
 

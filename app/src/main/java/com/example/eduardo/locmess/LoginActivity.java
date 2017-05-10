@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText _emailText;
     EditText _passwordText;
     TextView _signupLink;
+    DBHandler db = new DBHandler(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +79,15 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        //checkLogin(email, password);
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        // check if the Stored password matches with  Password entered by user
+                        if(db.getUser(email, password))
+                        {
+                            onLoginSuccess();
+                        }
+                        else
+                        {
+                            onLoginFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);

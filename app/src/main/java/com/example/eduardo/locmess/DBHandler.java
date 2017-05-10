@@ -145,4 +145,70 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_LOCAL, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
     }
+
+    // Adding new User
+    public boolean addUser(String user, String pass, String email, String intTop) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_USER, user); // User Name
+        values.put(KEY_PASS, pass); // Password
+        values.put(KEY_EMAIL, email); // Email
+        values.put(KEY_INTETOPICS, intTop); // Topics of interest
+        values.put(KEY_CREATED,ts); //Current time
+        // Inserting Row
+        db.insert(TABLE_USER, null, values);
+        db.close(); // Closing database connection
+        return true;
+    }
+
+    // Updating User
+    public boolean updateuser(Integer id, String user, String pass, String email, String intTop) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_USER, user); // User Name
+        values.put(KEY_PASS, pass); // Password
+        values.put(KEY_EMAIL, email); // Email
+        values.put(KEY_INTETOPICS, intTop); // Topics of interest
+        values.put(KEY_UPDATED,ts); //Current time
+        db.update(TABLE_USER, values, KEY_ID + " = ? ", new String[] { Integer.toString(id) } );
+        return true;
+    }
+
+    // Getting User
+    public boolean getUser(String email, String password) {
+        // array of columns to fetch
+        String[] columns = {
+                KEY_ID
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = KEY_EMAIL + " = ?" + " AND " + KEY_PASS + " = ?";
+
+        // selection arguments
+        String[] selectionArgs = {email, password};
+
+        // query user table with conditions
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
+         */
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);                      //The sort order
+
+        int cursorCount = cursor.getCount();
+
+        cursor.close();
+        db.close();
+        if (cursorCount > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
