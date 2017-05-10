@@ -112,6 +112,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    // Updating local
     public boolean updateLocal(Integer id, String local, String gps, String radius, String ssid) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -124,18 +125,22 @@ public class DBHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    // Getting local
     public Cursor getLocal(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery( "SELECT * FROM " + TABLE_LOCAL + " WHERE " +
                 KEY_ID + "=?", new String[] { Integer.toString(id) } );
         return res;
     }
+
+    // Getting All locals
     public Cursor getAllLocals() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery( "SELECT " +KEY_ID + "," + KEY_LOCAL + " FROM " + TABLE_LOCAL, null );
         return res;
     }
 
+    // Deleting local
     public Integer deleteLocal(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_LOCAL, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
