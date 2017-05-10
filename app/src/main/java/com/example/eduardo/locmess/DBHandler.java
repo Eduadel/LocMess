@@ -104,7 +104,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_LOCAL, local); // Local Name
-        values.put(KEY_GPS, ssid); // Local SSID
+        values.put(KEY_SSID, ssid); // Local SSID
         values.put(KEY_CREATED,ts); //Current time
         // Inserting Row
         db.insert(TABLE_LOCAL, null, values);

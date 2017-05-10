@@ -21,7 +21,7 @@ public class EditLocationActivity extends AppCompatActivity {
     double longitude, latitude;
     float radius;
     Button btn_pos, btn_edit;
-    EditText local, viewRadius, viewGps, txtSSID;
+    EditText local, viewRadius, viewGps, viewSSID;
     private TrackGPS gps;
     DBHandler db = new DBHandler(this);
     String loc,GPS,RADIUS,SSID;
@@ -40,7 +40,7 @@ public class EditLocationActivity extends AppCompatActivity {
         local = (EditText) findViewById(R.id.txtLocal);
         viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
         viewGps = (EditText) findViewById(R.id.vwGpsCoor);
-        txtSSID = (EditText) findViewById(R.id.txtSSID);
+        viewSSID = (EditText) findViewById(R.id.txtSSID);
 
         btn_pos = (Button) findViewById(R.id.btnGetPos);
         btn_edit = (Button) findViewById(R.id.btnSaveEdit);
@@ -58,7 +58,7 @@ public class EditLocationActivity extends AppCompatActivity {
         local.setText(localName);
         viewGps.setText(gpsInfo);
         viewRadius.setText(radiusInfo);
-        txtSSID.setText(ssidInfo);
+        viewSSID.setText(ssidInfo);
 
         btn_pos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +99,7 @@ public class EditLocationActivity extends AppCompatActivity {
         loc = local.getText().toString();
         GPS = viewGps.getText().toString();
         RADIUS = viewRadius.getText().toString();
-        SSID = txtSSID.getText().toString();
+        SSID = viewSSID.getText().toString();
 
         if(db.updateLocal(id, loc, GPS, RADIUS, SSID)) {
             Intent intent = new Intent(this, MainActivity.class);
