@@ -85,12 +85,11 @@ public class LocationFragment extends Fragment {
                 db.KEY_LOCAL
         };
         int [] widgets = new int[] {
-                R.id.local_id,
-                R.id.local_name
+                R.id.locaid,
+                R.id.locaname
         };
 
-        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getActivity(), R.layout.item_layout,
-                cursor, columns, widgets, 0);
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(rootView.getContext(), R.layout.item_layout, cursor, columns, widgets, 0);
         lv = (ListView) rootView.findViewById(R.id.locationListView);
         lv.setAdapter(cursorAdapter);
 

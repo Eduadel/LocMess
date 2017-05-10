@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHandler extends SQLiteOpenHelper {
 
+    // Database Name
+    private static final String DATABASE_NAME = "loc_mess.db";
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    // Database Name
-    private static final String DATABASE_NAME = "loc_mess";
     // Table names
     public static final String TABLE_USER = "user";
     public static final String TABLE_MESSAGE = "messages";
@@ -47,21 +47,21 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USER + " TEXT,"
-                + KEY_PASS + " TEXT, " + KEY_EMAIL + " TEXT, " + KEY_INTETOPICS + " TEXT, " + KEY_CREATED + " DATETIME, " + KEY_UPDATED + " DATETIME " + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE," + KEY_USER + " TEXT,"
+                + KEY_PASS + " TEXT NOT NULL, " + KEY_EMAIL + " TEXT NOT NULL, " + KEY_INTETOPICS + " TEXT, " + KEY_CREATED + " DATETIME, " + KEY_UPDATED + " DATETIME " + ")";
         String CREATE_MESSAGES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGE + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_MESSAGE + " TEXT,"
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE," + KEY_MESSAGE + " TEXT,"
                 + KEY_LTYPE + " BOOLEAN, " + KEY_BTIME + " DATETIME, " + KEY_ETIME + " DATETIME, " + KEY_PTIME + " DATETIME, " + KEY_POC + " INTEGER, " + KEY_IDCREATOR + " INTEGER, "
                 + "FOREIGN KEY ("+KEY_IDCREATOR+") REFERENCES " + TABLE_USER + "("+KEY_ID+")," + " FOREIGN KEY ("+KEY_POC+") REFERENCES " + TABLE_LOCAL + "("+KEY_ID+"));";
         String CREATE_LOCAL_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_LOCAL + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_LOCAL + " TEXT,"
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE," + KEY_LOCAL + " TEXT NOT NULL,"
                 + KEY_GPS + " TEXT, " + KEY_RADIUS + " TEXT, " + KEY_SSID + " TEXT, " + KEY_CREATED + " DATETIME, " + KEY_UPDATED + " DATETIME, " + KEY_IDCREATOR + " INTEGER, "
                 + "FOREIGN KEY ("+KEY_IDCREATOR+") REFERENCES "+TABLE_USER+"("+KEY_ID+"));";
         String CREATE_BLACK_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BLACKLIST + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_IDMESSAGE + " INTEGER," + KEY_TOINTE + " BOOLEAN, "
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE," + KEY_IDMESSAGE + " INTEGER," + KEY_TOINTE + " BOOLEAN, "
                 + "FOREIGN KEY ("+KEY_IDMESSAGE+") REFERENCES "+TABLE_MESSAGE+"("+KEY_ID+"));";
         String CREATE_WHITE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_IDMESSAGE + " INTEGER," + KEY_TOINTE + " BOOLEAN, "
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE," + KEY_IDMESSAGE + " INTEGER," + KEY_TOINTE + " BOOLEAN, "
                 + "FOREIGN KEY ("+KEY_IDMESSAGE+") REFERENCES "+TABLE_MESSAGE+"("+KEY_ID+"));";
 
         db.execSQL(CREATE_USER_TABLE);
@@ -126,14 +126,12 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public Cursor getAllLocals() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery( "SELECT local_name FROM " + TABLE_LOCAL, null );
+        Cursor res = db.rawQuery( "SELECT " + KEY_LOCAL + " FROM " + TABLE_LOCAL, null );
         return res;
     }
 
     public Integer deleteLocal(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(KEY_LOCAL,
-                KEY_ID + " = ? ",
-                new String[] { Integer.toString(id) });
+        return db.delete(KEY_LOCAL, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
     }
 }

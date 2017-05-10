@@ -4,10 +4,6 @@
 
     <uses-sdk android:minSdkVersion="14" />
 
-    <permission
-        android:name="com.example.eduardo.locmess.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -20,7 +16,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".app.AppController"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,13 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.eduardo.locmess.MainActivity" />
-        </activity>
+
         <activity
             android:name=".LoginActivity"
             android:excludeFromRecents="true"
@@ -46,13 +35,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
         <activity android:name=".SignupActivity" />
+
         <activity android:name=".AddLocationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.eduardo.locmess.MainActivity" />
         </activity>
+
         <activity android:name=".EditLocationActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+        <activity android:name=".AddSSIDLocationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+
+        <activity android:name=".CreateMessage"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".ShowMessage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.eduardo.locmess.MainActivity" />
@@ -63,10 +79,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".AddSSIDLocationActivity" />
-        <activity android:name=".CreateMessage"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ShowMessage"></activity>
     </application>
 
 </manifest>
