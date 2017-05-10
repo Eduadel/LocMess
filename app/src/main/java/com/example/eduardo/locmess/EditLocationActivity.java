@@ -1,6 +1,7 @@
 package com.example.eduardo.locmess;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import static com.example.eduardo.locmess.LocationFragment.KEY_EXTRA_INFO_ID;
+
 public class EditLocationActivity extends AppCompatActivity {
 
     double longitude, latitude;
@@ -22,6 +25,7 @@ public class EditLocationActivity extends AppCompatActivity {
     private TrackGPS gps;
     DBHandler db = new DBHandler(this);
     String loc,GPS,RADIUS,SSID;
+    Intent mintent;
     int id;
 
     @Override
@@ -30,15 +34,31 @@ public class EditLocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String val = getIntent().getExtras().getString("Local");
+        mintent = getIntent();
+        id = mintent.getIntExtra(KEY_EXTRA_INFO_ID,0);
 
         local = (EditText) findViewById(R.id.txtLocal);
+        viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
+        viewGps = (EditText) findViewById(R.id.vwGpsCoor);
         txtSSID = (EditText) findViewById(R.id.txtSSID);
-
-        local.setText(val);
 
         btn_pos = (Button) findViewById(R.id.btnGetPos);
         btn_edit = (Button) findViewById(R.id.btnSaveEdit);
+
+        Cursor rs = db.getLocal(id);
+        rs.moveToFirst();
+        String localName = rs.getString(rs.getColumnIndex(db.KEY_LOCAL));
+        String gpsInfo = rs.getString(rs.getColumnIndex(db.KEY_GPS));
+        String radiusInfo = rs.getString(rs.getColumnIndex(db.KEY_RADIUS));
+        String ssidInfo = rs.getString(rs.getColumnIndex(db.KEY_SSID));
+        if (!rs.isClosed()) {
+            rs.close();
+        }
+
+        local.setText(localName);
+        viewGps.setText(gpsInfo);
+        viewRadius.setText(radiusInfo);
+        txtSSID.setText(ssidInfo);
 
         btn_pos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +84,6 @@ public class EditLocationActivity extends AppCompatActivity {
             latitude = gps.getLatitude();
             radius = gps.getAccuracy();
 
-            viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
-            viewGps = (EditText) findViewById(R.id.vwGpsCoor);
-
             viewGps.setText("\nLongitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
             viewRadius.setText(Double.toString(radius) + " m");
         }
@@ -79,15 +96,15 @@ public class EditLocationActivity extends AppCompatActivity {
 
     public void SaveLocation(){
 
-        id = getIntent().getExtras().getInt("Local");
         loc = local.getText().toString();
-        SSID = txtSSID.getText().toString();
         GPS = viewGps.getText().toString();
         RADIUS = viewRadius.getText().toString();
+        SSID = txtSSID.getText().toString();
+
         if(db.updateLocal(id, loc, GPS, RADIUS, SSID)) {
-            Toast.makeText(getApplicationContext(), "Local Update Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Local Update Successful", Toast.LENGTH_SHORT).show();
             finish();
         }
         else {

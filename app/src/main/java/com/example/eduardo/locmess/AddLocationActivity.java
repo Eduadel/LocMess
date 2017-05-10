@@ -31,11 +31,12 @@ public class AddLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        local = (EditText) findViewById(R.id.txtLocal);
 
+        local = (EditText) findViewById(R.id.txtLocal);
+        viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
+        viewGps = (EditText) findViewById(R.id.vwGpsCoor);
         btn_get = (Button) findViewById(R.id.btnGetPos);
         btn_save = (Button) findViewById(R.id.btnSavePos);
-
 
         btn_get.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +62,7 @@ public class AddLocationActivity extends AppCompatActivity {
             latitude = gps.getLatitude();
             radius = gps.getAccuracy();
 
-            viewRadius = (EditText) findViewById(R.id.vwGpsRadius);
-            viewGps = (EditText) findViewById(R.id.vwGpsCoor);
-
-            viewGps.setText("\nLongitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
+            viewGps.setText("Longitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
             viewRadius.setText(Double.toString(radius) + " m");
         }
         else
@@ -77,11 +75,12 @@ public class AddLocationActivity extends AppCompatActivity {
 
         loc = local.getText().toString();
         GPS = viewGps.getText().toString();
-        RADIUS = viewRadius.getText().toString();
+        RADIUS = viewRadius.getText().toString();;
+
         if(db.addLocal(loc,GPS,RADIUS)) {
-            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
             finish();
         }
         else{

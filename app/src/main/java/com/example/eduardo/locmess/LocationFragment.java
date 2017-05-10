@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.eduardo.locmess.R.id.info;
 import static com.example.eduardo.locmess.R.id.parent;
 
 
@@ -40,12 +41,12 @@ public class LocationFragment extends Fragment {
 
     private FloatingActionButton fgps, fssid;
     private FloatingActionMenu fab;
-    ArrayList<String> listItems = new ArrayList<String>();
-    ArrayAdapter adapter;
     ListView lv;
-    int posit;
-    int toRemove;
+    int posit, infoID;
+
     DBHandler db;
+    SimpleCursorAdapter cursorAdapter;
+    public final static String KEY_EXTRA_INFO_ID = "KEY_EXTRA_INFO_ID";
 
     public static LocationFragment newInstance() {
         LocationFragment fragment = new LocationFragment();
@@ -80,25 +81,20 @@ public class LocationFragment extends Fragment {
         db = new DBHandler(getActivity());
 
         final Cursor cursor = db.getAllLocals();
-        String [] columns = new String[] {
-                db.KEY_ID,
-                db.KEY_LOCAL
-        };
-        int [] widgets = new int[] {
-                R.id.locaid,
-                R.id.locaname
-        };
+        String [] columns = new String[] {db.KEY_ID, db.KEY_LOCAL};
+        int [] widgets = new int[] {R.id.locid, R.id.locname};
 
-        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(rootView.getContext(), R.layout.item_layout, cursor, columns, widgets, 0);
+        cursorAdapter = new SimpleCursorAdapter(rootView.getContext(), R.layout.item_layout, cursor, columns, widgets,0);
         lv = (ListView) rootView.findViewById(R.id.locationListView);
         lv.setAdapter(cursorAdapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor itemCursor = (Cursor) lv.getItemAtPosition(position);
+                infoID = itemCursor.getInt(itemCursor.getColumnIndex(db.KEY_ID));
                 Intent intent = new Intent(getActivity(), EditLocationActivity.class);
-                String listItem = (String)lv.getItemAtPosition(position);
-                intent.putExtra("Local", listItem);
+                intent.putExtra(KEY_EXTRA_INFO_ID, infoID);
                 startActivity(intent);
             }
         });
@@ -106,7 +102,8 @@ public class LocationFragment extends Fragment {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                posit = position;
+                Cursor itemCursor = (Cursor) lv.getItemAtPosition(position);
+                infoID = itemCursor.getInt(itemCursor.getColumnIndex(db.KEY_ID));
                 setHasOptionsMenu(true);//ActionBar Icons Actions
                 return true;
             }
@@ -142,14 +139,13 @@ public class LocationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                toRemove = posit;
-                AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                 adb.setTitle("Delete?");
                 adb.setMessage("Are you sure you want to delete ?");
                 adb.setNegativeButton("Cancel", null);
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                      public void onClick(DialogInterface dialog, int id) {
-                                db.deleteLocal(toRemove);
+                                db.deleteLocal(infoID);
                                 Toast.makeText(getActivity().getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -158,7 +154,7 @@ public class LocationFragment extends Fragment {
                         });
                 adb.show();
                 setHasOptionsMenu(false);
-                return true;
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
 

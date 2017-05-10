@@ -9,9 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHandler extends SQLiteOpenHelper {
 
     // Database Name
-    private static final String DATABASE_NAME = "loc_mess.db";
+    public static final String DATABASE_NAME = "loc_mess.db";
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     // Table names
     public static final String TABLE_USER = "user";
     public static final String TABLE_MESSAGE = "messages";
@@ -39,6 +39,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String KEY_SSID = "ssid_info";
     public static final String KEY_IDMESSAGE = "id_message";
     public static final String KEY_TOINTE = "tointerest";
+
+    Long tsLong = System.currentTimeMillis()/1000;
+    String ts = tsLong.toString();
 
 
     public DBHandler(Context context) {
@@ -89,6 +92,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_LOCAL, local); // Local Name
         values.put(KEY_GPS, gps); // Local Coord
         values.put(KEY_RADIUS, radius); // Local Radius
+        values.put(KEY_CREATED,ts); //Current time
         // Inserting Row
         db.insert(TABLE_LOCAL, null, values);
         db.close(); // Closing database connection
@@ -101,6 +105,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_LOCAL, local); // Local Name
         values.put(KEY_GPS, ssid); // Local SSID
+        values.put(KEY_CREATED,ts); //Current time
         // Inserting Row
         db.insert(TABLE_LOCAL, null, values);
         db.close(); // Closing database connection
@@ -114,6 +119,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_GPS, gps); // Local Coord
         values.put(KEY_RADIUS, radius); // Local Radius
         values.put(KEY_SSID, ssid); // Local SSID
+        values.put(KEY_UPDATED,ts); //Current time
         db.update(TABLE_LOCAL, values, KEY_ID + " = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
@@ -126,12 +132,12 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public Cursor getAllLocals() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery( "SELECT " + KEY_LOCAL + " FROM " + TABLE_LOCAL, null );
+        Cursor res = db.rawQuery( "SELECT " +KEY_ID + "," + KEY_LOCAL + " FROM " + TABLE_LOCAL, null );
         return res;
     }
 
     public Integer deleteLocal(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(KEY_LOCAL, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
+        return db.delete(TABLE_LOCAL, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
     }
 }

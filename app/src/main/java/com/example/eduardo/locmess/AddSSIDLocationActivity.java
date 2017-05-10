@@ -117,10 +117,11 @@ public class AddSSIDLocationActivity extends AppCompatActivity implements View.O
 
         loc = local.getText().toString();
         SSID = txtSSID.getText().toString();
+
         if(db.addLocalSSID(loc,SSID)) {
-            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Local Inserted", Toast.LENGTH_SHORT).show();
             finish();
         }
         else{
