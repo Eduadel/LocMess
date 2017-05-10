@@ -1,10 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_id"
+    android:id="@+id/edit_password_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:longClickable="true"
-    tools:context="com.example.eduardo.locmess.ProfileFragment">
+    tools:context="com.example.eduardo.locmess.AddInterestActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,10 +22,10 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/edit_username"
+                android:id="@+id/add_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/username" />
+                android:hint="@string/key" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -35,46 +35,21 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/edit_email"
+                android:id="@+id/add_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"/>
+                android:hint="@string/value"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_edit_interests"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="24dp"
-            android:padding="12dp"
-            android:text="@string/btn_edit_interests" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_edit_pass"
+            android:id="@+id/btn_add_interest"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="6dp"
             android:padding="12dp"
-            android:text="@string/btn_edit_password" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_save_prof"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="6dp"
-            android:padding="12dp"
-            android:text="@string/btn_save_changes" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_logout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="6dp"
-            android:padding="12dp"
-            android:text="@string/btn_logout" />
+            android:text="@string/btn_save_interest"
+            android:onClick="addInterest"/>
     </LinearLayout>
+
 </ScrollView>

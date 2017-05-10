@@ -74,6 +74,30 @@
                 android:value="com.example.eduardo.locmess.MainActivity" />
         </activity>
 
+        <activity android:name=".EditPasswordActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+        <activity android:name=".ListInterestsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+        <activity android:name=".EditInterestActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+        <activity android:name=".AddInterestActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
         <service
             android:name=".TrackGPS"
             android:enabled="true"

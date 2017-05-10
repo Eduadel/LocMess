@@ -3,6 +3,9 @@
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="repeat_new_password">Repeat New Password</string>
     <string name="btn_login">Login</string>
     <string name="btn_logout">Logout</string>
     <string name="link_signup">No account yet? Create one</string>
@@ -22,7 +25,11 @@
     <string name="btn_SSID">Get SSID Name</string>
     <string name="btn_SaveLoca">Save Location</string>
     <string name="btn_EditLoca">Save Edition</string>
-    <string name="btn_save_profile">Save Changes</string>
-    <string name="btn_change_password">Change Password</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_save_interest">Save Interest</string>
+    <string name="btn_edit_password">Change Password</string>
     <string name="btn_edit_interests">Edit Interests</string>
+    <string name="key">Key</string>
+    <string name="value">Value</string>
+    <string name="add">Add</string>
 </resources>

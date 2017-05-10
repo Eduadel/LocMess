@@ -19,6 +19,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressDialog pDialog;
 
+    // session manager
+    SessionManager session;
+
     Button _loginButton;
     EditText _emailText;
     EditText _passwordText;
@@ -30,11 +33,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // session manager
+        session = new SessionManager(getApplicationContext());
 
         _loginButton  = (Button) findViewById(R.id.btn_login);
         _emailText = (EditText) findViewById(R.id.input_email);
-         _passwordText = (EditText) findViewById(R.id.input_password);
-         _signupLink = (TextView) findViewById(R.id.link_signup);
+        _passwordText = (EditText) findViewById(R.id.input_password);
+        _signupLink = (TextView) findViewById(R.id.link_signup);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -82,6 +87,13 @@ public class LoginActivity extends AppCompatActivity {
                         // check if the Stored password matches with  Password entered by user
                         if(db.getUser(email, password))
                         {
+                            // fetch data from db
+                            // TODO
+
+                            // create login session with data fetched from db
+                            session.createLoginSession("TESTE", "TESTE@TESTE.TESTE");
+
+                            // call on login success
                             onLoginSuccess();
                         }
                         else
