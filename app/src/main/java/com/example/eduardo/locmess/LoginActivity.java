@@ -7,6 +7,7 @@ import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,25 +17,24 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-
-    private ProgressDialog pDialog;
-
     // session manager
     SessionManager session;
-
     Button _loginButton;
     EditText _emailText;
     EditText _passwordText;
     TextView _signupLink;
     DBHandler db = new DBHandler(this);
+    private ProgressDialog pDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // session manager
+        //session manager
         session = new SessionManager(getApplicationContext());
+        //Block auto opening keyboard
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         _loginButton  = (Button) findViewById(R.id.btn_login);
         _emailText = (EditText) findViewById(R.id.input_email);

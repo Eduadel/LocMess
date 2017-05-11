@@ -98,6 +98,31 @@
                 android:value="com.example.eduardo.locmess.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".FileBrowser"
+            android:label="@string/title_activity_file_browser"
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ClientActivity"
+            android:label="@string/title_activity_client"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.eduardo.locmess.MainActivity" />
+        </activity>
+
+        <service
+            android:name=".ClientService"
+            android:exported="false" />
+        <service
+            android:name=".ServerService"
+            android:exported="false" />
+
         <service
             android:name=".TrackGPS"
             android:enabled="true"

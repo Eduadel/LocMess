@@ -3,6 +3,7 @@ package com.example.eduardo.locmess;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,9 +26,6 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-
-    private ProgressDialog pDialog;
-
     Button _signupButton;
     EditText _nameText;
     EditText _emailText;
@@ -35,6 +33,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText _passwordText;
     TextView _loginLink;
     DBHandler db = new DBHandler(this);
+    private ProgressDialog pDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +86,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
+
 
 
 
@@ -161,4 +161,5 @@ public class SignupActivity extends AppCompatActivity {
 
         return valid;
     }
+
 }

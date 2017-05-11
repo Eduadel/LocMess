@@ -10,8 +10,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Database Name
     public static final String DATABASE_NAME = "loc_mess.db";
-    // Database Version
-    private static final int DATABASE_VERSION = 3;
     // Table names
     public static final String TABLE_USER = "user";
     public static final String TABLE_MESSAGE = "messages";
@@ -39,7 +37,8 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String KEY_SSID = "ssid_info";
     public static final String KEY_IDMESSAGE = "id_message";
     public static final String KEY_TOINTE = "tointerest";
-
+    // Database Version
+    private static final int DATABASE_VERSION = 3;
     Long tsLong = System.currentTimeMillis()/1000;
     String ts = tsLong.toString();
 
@@ -210,5 +209,11 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return false;
+    }
+
+    // Deleting user Logout
+    public Integer deleteuser(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_USER, KEY_ID + " = ? ", new String[] { Integer.toString(id) });
     }
 }

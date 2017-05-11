@@ -1,5 +1,8 @@
 package com.example.eduardo.locmess;
 
+/**
+ * Created by Eduardo on 11/05/2017.
+ */
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
