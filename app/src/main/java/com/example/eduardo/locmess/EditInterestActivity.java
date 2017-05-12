@@ -7,15 +7,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class EditInterestActivity extends AppCompatActivity{
+public class EditInterestActivity extends AppCompatActivity {
 
-    public final static String ACTION_BAR_TITLE = "Edit Interest";
+    private final static String ACTION_BAR_TITLE = "Edit Interest";
+    private final static String ERROR_EMPTY = "This field cannot be emtpy.";
+    private final static String ERROR_LENGTH = "This field has a maximum of 10 characters.";
+    private final static String ERROR_DEFAULT = "An error as occurred";
+    private final static String SUCCESS_SAVE = "Changes saved successfully";
 
     // session manager
     SessionManager session;
 
     // text fields
     EditText keyField, valueField;
+
+    // interest info id
+    int infoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +34,18 @@ public class EditInterestActivity extends AppCompatActivity{
         // session manager
         session = new SessionManager(getApplicationContext());
 
-        // get clicked item
-        // TODO COMPLETE
-        getIntent().getIntExtra(ListInterestsActivity.KEY_EXTRA_INFO_ID, 0);
+        // get clicked item info
+        infoId = getIntent().getIntExtra(ListInterestsActivity.KEY_EXTRA_INFO_ID, 0);
+        String infoKey = getIntent().getStringExtra(ListInterestsActivity.KEY_EXTRA_INFO_KEY);
+        String infoValue = getIntent().getStringExtra(ListInterestsActivity.KEY_EXTRA_INFO_VALUE);
 
         // get text fields
         keyField = (EditText) findViewById(R.id.edit_key);
         valueField = (EditText) findViewById(R.id.edit_value);
 
         // update key and value fields
-        // TODO
+        keyField.setText(infoKey);
+        valueField.setText(infoValue);
     }
 
     // button event listener
@@ -48,29 +57,48 @@ public class EditInterestActivity extends AppCompatActivity{
         String key = keyField.getText().toString();
 
         // get value
-        String value = keyField.getText().toString();
+        String value = valueField.getText().toString();
 
         // check key
         if (key.isEmpty()) {
-            keyField.setError("This field cannot be emtpy.");
+            keyField.setError(ERROR_EMPTY);
+            return;
+        } else if (key.length() > 10) {
+            keyField.setError(ERROR_LENGTH);
             return;
         }
 
         // check value
         if (value.isEmpty()) {
-            valueField.setError("This field cannot be emtpy.");
+            valueField.setError(ERROR_EMPTY);
+            return;
+        } else if (value.length() > 10) {
+            valueField.setError(ERROR_LENGTH);
             return;
         }
 
-        // update new key / value
-        // TODO CALL DB
+        // new database handler
+        DBHandler db = new DBHandler(getApplicationContext());
 
-        // display success message
-        Toast.makeText(getApplicationContext(), "Changes saved successfully", Toast.LENGTH_SHORT).show();
+        // update new key / value
+        if (!db.updateInterest(new Integer(infoId), key, value)) {
+            // try again
+            if (!db.updateInterest(new Integer(infoId), key, value)) {
+                // display error message
+                Toast.makeText(getApplicationContext(), ERROR_DEFAULT, Toast.LENGTH_SHORT).show();
+            } else {
+                // display success message
+                Toast.makeText(getApplicationContext(), SUCCESS_SAVE, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // display success message
+            Toast.makeText(getApplicationContext(), SUCCESS_SAVE, Toast.LENGTH_SHORT).show();
+        }
 
         // go to previous activity
         Intent intent = new Intent(v.getContext(), ListInterestsActivity.class);
         startActivity(intent);
+        finish();
     }
 
     // button event listener
@@ -78,15 +106,19 @@ public class EditInterestActivity extends AppCompatActivity{
         // check user login
         session.checkLogin();
 
+        // new database handler
+        DBHandler db = new DBHandler(getApplicationContext());
+
         // delete interest
-        // TODO CALL DB
+        db.deleteInterest(infoId);
 
         // display success message
-        Toast.makeText(getApplicationContext(), "Changes saved successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), SUCCESS_SAVE, Toast.LENGTH_SHORT).show();
 
         // go to previous activity
         Intent intent = new Intent(v.getContext(), ListInterestsActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }

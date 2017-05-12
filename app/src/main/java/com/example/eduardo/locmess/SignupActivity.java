@@ -3,7 +3,7 @@ package com.example.eduardo.locmess;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.AsyncTask;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,24 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
+
     Button _signupButton;
     EditText _nameText;
     EditText _emailText;
-    EditText _clubText;
     EditText _passwordText;
     TextView _loginLink;
     DBHandler db = new DBHandler(this);
@@ -44,7 +33,6 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton  = (Button) findViewById(R.id.btn_signup);
         _nameText = (EditText) findViewById(R.id.input_name);
         _emailText = (EditText) findViewById(R.id.input_email);
-        _clubText = (EditText) findViewById(R.id.input_club);
 
         _passwordText = (EditText) findViewById(R.id.input_password);
         _loginLink = (TextView) findViewById(R.id.link_login);
@@ -72,7 +60,6 @@ public class SignupActivity extends AppCompatActivity {
         final String name = _nameText.getText().toString().trim();
         final String email = _emailText.getText().toString().trim();
         final String password = _passwordText.getText().toString().trim();
-        final String topics = _clubText.getText().toString().trim();
 
         if (!validate()) {
             onSignupFailed();
@@ -95,7 +82,7 @@ public class SignupActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        if(db.addUser(name,password,email,topics)) {
+                        if(db.addUser(name,password,email)) {
                             Toast.makeText(getApplicationContext(), "User Inserted", Toast.LENGTH_SHORT).show();
                             onSignupSuccess();
                         }
@@ -129,7 +116,6 @@ public class SignupActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        String club = _clubText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
             _nameText.setError("at least 3 characters");
@@ -150,13 +136,6 @@ public class SignupActivity extends AppCompatActivity {
             valid = false;
         } else {
             _passwordText.setError(null);
-        }
-
-        if (club.isEmpty() || club.length() < 3) {
-            _clubText.setError("at least 3 characters");
-            valid = false;
-        } else {
-            _clubText.setError(null);
         }
 
         return valid;

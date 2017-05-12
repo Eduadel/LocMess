@@ -10,7 +10,11 @@ import android.widget.Toast;
 
 public class AddInterestActivity extends AppCompatActivity {
 
-    public final static String ACTION_BAR_TITLE = "Add New Interest";
+    private final static String ACTION_BAR_TITLE = "Add New Interest";
+    private final static String ERROR_EMPTY = "This field cannot be emtpy.";
+    private final static String ERROR_LENGTH = "This field has a maximum of 10 characters.";
+    private final static String ERROR_DEFAULT = "An error as occurred";
+    private final static String SUCCESS_SAVE = "Changes saved successfully";
 
     // session manager
     SessionManager session;
@@ -39,28 +43,47 @@ public class AddInterestActivity extends AppCompatActivity {
         String key = keyField.getText().toString();
 
         // get value
-        String value = keyField.getText().toString();
+        String value = valueField.getText().toString();
 
         // check key
         if (key.isEmpty()) {
-            keyField.setError("This field cannot be emtpy.");
+            keyField.setError(ERROR_EMPTY);
+            return;
+        } else if (key.length() > 10) {
+            keyField.setError(ERROR_LENGTH);
             return;
         }
 
         // check value
         if (value.isEmpty()) {
-            valueField.setError("This field cannot be emtpy.");
+            valueField.setError(ERROR_EMPTY);
+            return;
+        } else if (value.length() > 10) {
+            valueField.setError(ERROR_LENGTH);
             return;
         }
 
-        // update new key / value
-        // TODO CALL DB
+        // new database handler
+        DBHandler db = new DBHandler(getApplicationContext());
 
-        // display success message
-        Toast.makeText(getApplicationContext(), "Changes saved successfully", Toast.LENGTH_SHORT).show();
+        // add interest
+        if (!db.addInterest(key, value)) {
+            // try again
+            if (!db.addInterest(key, value)) {
+                // display error message
+                Toast.makeText(getApplicationContext(), ERROR_DEFAULT, Toast.LENGTH_SHORT).show();
+            } else {
+                // display success message
+                Toast.makeText(getApplicationContext(), SUCCESS_SAVE, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // display success message
+            Toast.makeText(getApplicationContext(), SUCCESS_SAVE, Toast.LENGTH_SHORT).show();
+        }
 
         // go to previous activity
         Intent intent = new Intent(v.getContext(), ListInterestsActivity.class);
         startActivity(intent);
+        finish();
     }
 }
