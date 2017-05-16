@@ -102,7 +102,7 @@ public class AddSSIDLocationActivity extends AppCompatActivity implements View.O
             while (size >= 0)
             {
                 HashMap<String, String> item = new HashMap<String, String>();
-                item.put(ITEM_KEY, results.get(size).SSID + "  " + results.get(size).capabilities);
+                item.put(ITEM_KEY, results.get(size).SSID );//+ "  " + results.get(size).capabilities);
 
                 arraylist.add(item);
                 size--;
