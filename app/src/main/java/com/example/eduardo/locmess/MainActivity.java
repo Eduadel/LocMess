@@ -28,7 +28,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
+import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
+import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+
+public class MainActivity extends AppCompatActivity implements
+        PeerListListener, GroupInfoListener {
 
     private static final String TAG = "MainActivity";
     public final int fileRequestID = 55;
@@ -37,6 +50,17 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     FragmentTransaction transaction;
     DBHandler db = new DBHandler(this);
+    static List<String> peersStr = new ArrayList<String>();
+    
+    //Termite and Wifi-Direct
+    private static SimWifiP2pBroadcastReceiver mReceiver;
+    private static SimWifiP2pManager mManager = null;
+    private static SimWifiP2pManager.Channel mChannel = null;
+    private static Messenger mService = null;
+    private boolean mBound = false;
+    private static SimWifiP2pSocketServer mSrvSocket = null;
+    private static SimWifiP2pSocket mCliSocket = null;
+    
     private WifiP2pManager wifiManager;
     private WifiP2pManager.Channel wifichannel;
     private BroadcastReceiver wifiServerReceiver;
@@ -93,7 +117,24 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
         statusCheck();
 
-        wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+       if(!checkIfArraysCreated()){createSRArray();}
+
+        //Termite related ...............................................................
+        // initialize the WDSim API
+        SimWifiP2pSocketManager.Init(this.getApplicationContext());
+
+        // register broadcast receiver
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
+        mReceiver = new SimWifiP2pBroadcastReceiver(this);
+        registerReceiver(mReceiver, filter);
+
+        setWifiOn();
+        
+       /* wifiManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         wifichannel = wifiManager.initialize(this, getMainLooper(), null);
         //wifiServerReceiver = new ServerWifiBroadcastReceiver(wifiManager, wifichannel, this);
 
@@ -111,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(getBaseContext(), "No File being transfered", Toast.LENGTH_LONG).show();
 
-        registerReceiver(wifiServerReceiver, wifiServerReceiverIntentFilter);
+        registerReceiver(wifiServerReceiver, wifiServerReceiverIntentFilter);*/
 
     }
 
@@ -204,7 +245,186 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, e.toString());
         }
     }
+    
+    public void termiteSender(PinMessage p) {
+        mManager.requestGroupInfo(mChannel, MainActivity.this);
+        for(String st : peersStr){
+            Log.i(TAG, st);
+            new OutgoingCommTask().executeOnExecutor(
+                        AsyncTask.THREAD_POOL_EXECUTOR,
+                        st);
+            new SendCommTask().executeOnExecutor(
+                        AsyncTask.THREAD_POOL_EXECUTOR,
+                        p);
+            Log.i(TAG, "finished for loop");
+        }
+    }
 
+    public class IncommingCommTask extends AsyncTask<Void, PinMessage, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
+
+            try {
+                mSrvSocket = new SimWifiP2pSocketServer(
+                        Integer.parseInt(getString(R.string.port)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    SimWifiP2pSocket sock = mSrvSocket.accept();
+                    try {
+                        ObjectInput in = new ObjectInputStream(sock.getInputStream());
+                        PinMessage p = (PinMessage) in.readObject();
+                        publishProgress(p);
+                        sock.getOutputStream().write(("\n").getBytes());
+                    } catch (IOException e) {
+                        Log.i(TAG, "Error reading socket:");
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
+                        sock.close();
+                    }
+                } catch (IOException e) {
+                    Log.d("Error socket:", e.getMessage());
+                    break;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(PinMessage... values) {
+            Log.i(TAG, "Message Received");
+            PinMessage received_message = values[0];
+
+            //Show Alert to user
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom);
+            builder.setTitle(getResources().getString(R.string.title));
+            builder.setMessage(values[0].getContent());
+            builder.show();
+            //Add Message to cache
+            addMessage(values[0]);
+
+        }
+    }
+
+    private void addMessage(PinMessage value){
+        String key = "received";
+        try {
+            // Retrieve the list from internal storage
+            List<PinMessage> entries = (List<PinMessage>) InternalStorage.readObject(this, key);
+
+            //Add message to array
+            entries.add(value);
+
+            //Delete previous copy
+            String path = getFilesDir().getAbsolutePath() + "/" + key;
+            File file = new File(path);
+            file.delete();
+
+            //Save updated version to cache
+            InternalStorage.writeObject(this, key, entries);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public class OutgoingCommTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                mCliSocket = new SimWifiP2pSocket(params[0],
+                        Integer.parseInt("10001"));
+            } catch (UnknownHostException e) {
+                return "Unknown Host:" + e.getMessage();
+            } catch (IOException e) {
+                return "IO error:" + e.getMessage();
+            }
+            return null;
+        }
+    }
+
+    public class SendCommTask extends AsyncTask<PinMessage, String, Void> {
+
+        @Override
+        protected Void doInBackground(PinMessage... msg) {
+            try {
+                if (mCliSocket!=null) {
+                    ObjectOutput out = new ObjectOutputStream(mCliSocket.getOutputStream()); //write(SerializationUtils.serialize(msg[0]));
+                    out.writeObject(msg[0]);
+                    BufferedReader sockIn = new BufferedReader(
+                            new InputStreamReader(mCliSocket.getInputStream()));
+                    sockIn.readLine();
+                    out.flush();
+                    mCliSocket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mCliSocket = null;
+            return null;
+        }
+    }
+
+    public void setWifiOn(){
+        Intent intent = new Intent(MainActivity.this, SimWifiP2pService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mBound = true;
+
+        // spawn the chat server background task
+        new IncommingCommTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        // callbacks for service binding, passed to bindService()
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = new Messenger(service);
+            mManager = new SimWifiP2pManager(mService);
+            mChannel = mManager.initialize(getApplication(), getMainLooper(), null);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mService = null;
+            mManager = null;
+            mChannel = null;
+        }
+    };
+
+    @Override
+    public void onPeersAvailable(SimWifiP2pDeviceList peers) {
+        StringBuilder peersStr = new StringBuilder();
+        Log.i(TAG, "onPeersAvailable");
+        // compile list of devices in range
+        for (SimWifiP2pDevice device : peers.getDeviceList()) {
+            String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
+            peersStr.append(devstr);
+        }
+    }
+    @Override
+    public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
+                                     SimWifiP2pInfo groupInfo) {
+        Log.i(TAG, "onGroupInfoAvailable");
+        // compile list of network members
+        for (String deviceName : groupInfo.getDevicesInNetwork()) {
+            SimWifiP2pDevice device = devices.getByName(deviceName);
+            String devstr = "" + device.getVirtIp();
+            Log.i(TAG, devstr);
+            peersStr.add(devstr);
+        }
+    }
+
+
+    /*
     //WifiDirect
     public void startFileBrowseActivity(View view) {
 
@@ -288,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
         stopServer(null);
         Intent clientStartIntent = new Intent(this, ClientActivity.class);
         startActivity(clientStartIntent);
-    }
+    }*/
     //END WifiDirect
 
     @Override
