@@ -127,6 +127,8 @@
             android:name=".TrackGPS"
             android:enabled="true"
             android:exported="true" />
+        
+          <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
     </application>
 
