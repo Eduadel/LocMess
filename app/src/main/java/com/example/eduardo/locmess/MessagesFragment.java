@@ -273,7 +273,7 @@ public class MessagesFragment extends Fragment {
         c.close();
 
         //Get the lagitude and latitude from the string
-        temp = viewGps.split("/");
+        temp = viewGps.split("\n");
         double long_comp = Double.parseDouble(temp[0]);
         double lat_comp = Double.parseDouble(temp[1]);
 
