@@ -1,6 +1,7 @@
 package com.example.eduardo.locmess;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.eduardo.locmess.DBHandler.KEY_GPS;
+import static com.example.eduardo.locmess.DBHandler.KEY_LOCAL;
 
 public class MessagesFragment extends Fragment {
     private static final String TAG = "MessagesFragment";
@@ -219,4 +223,82 @@ public class MessagesFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
     }
+    
+     public void sendLocalMessages(){
+        MainActivity m_act = new MainActivity();
+        try {
+            // Retrieve the list from internal storage
+            List<PinMessage> entries = (List<PinMessage>) InternalStorage.readObject(this.getContext(), "sent_local");
+
+            if (entries.isEmpty()==false){
+                for (PinMessage p : entries){
+                   if (isInPretendedLocation(p.getLocation())){
+                       m_act.termiteSender(p);
+                   }
+                }
+            }
+
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    private boolean isInPretendedLocation(String location) {
+        TrackGPS gps = new TrackGPS(this.getContext());
+        DBHandler db = new DBHandler(this.getContext());
+        String[] temp;
+        String viewGps="";
+        double longitude=0, latitude=0;
+
+        //Get GPS coordinates of current location
+        if(gps.canGetLocation()) {
+            longitude = gps.getLongitude();
+            latitude = gps.getLatitude();
+        }
+        else {gps.showSettingsAlert();}
+
+        //Get GPS coordinates of message location
+        Cursor c = db.getAllLocals();
+
+        c.moveToFirst();
+        while(!c.isAfterLast()) {
+            if (location.equals(c.getString(c.getColumnIndex(KEY_LOCAL)))){
+                viewGps = c.getString(c.getColumnIndex(KEY_GPS));
+            }
+            c.moveToNext();
+        }
+
+        c.close();
+
+        //Get the lagitude and latitude from the string
+        temp = viewGps.split("/");
+        double long_comp = Double.parseDouble(temp[0]);
+        double lat_comp = Double.parseDouble(temp[1]);
+
+        if (distance(lat_comp, latitude, long_comp, longitude)<=20){
+            return true;
+        }else{return false;}
+    }
+
+    //Calculates the distance beteween two points
+    public static double distance(double lat1, double lat2, double lon1,
+                                  double lon2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance);
+    }
+
 }
