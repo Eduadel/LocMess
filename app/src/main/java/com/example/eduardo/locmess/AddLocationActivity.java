@@ -62,7 +62,7 @@ public class AddLocationActivity extends AppCompatActivity {
             latitude = gps.getLatitude();
             radius = gps.getAccuracy();
 
-            viewGps.setText("Longitude: "+Double.toString(longitude)+"\n\nLatitude: "+Double.toString(latitude));
+            viewGps.setText(Double.toString(longitude)+ "\n" + Double.toString(latitude));
             viewRadius.setText(Double.toString(radius) + " m");
         }
         else
