@@ -12,9 +12,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
+    private static final String SERVER_ADDRESS = "http://10.0.2.2:8000/reg?";
 
     Button _signupButton;
     EditText _nameText;
@@ -74,12 +81,14 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-
-
-
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
+
+                        // send request to webserver
+                        WebServiceHandler webHandler = new WebServiceHandler(getApplicationContext());
+                        webHandler.sendRequest(SERVER_ADDRESS + "name=" + name + "&email=" + email + "&password=" + password);
+
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
                         if(db.addUser(name,password,email)) {
@@ -94,7 +103,6 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }, 3000);
     }
-
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);

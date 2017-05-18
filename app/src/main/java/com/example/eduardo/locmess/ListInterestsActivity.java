@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -36,11 +35,6 @@ public class ListInterestsActivity extends AppCompatActivity {
 
         // session manager
         session = new SessionManager(getApplicationContext());
-
-        // create list view
-        /*lv = (ListView) findViewById(R.id.interestsListView);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testList);
-        lv.setAdapter(adapter);*/
 
         // instantiate database handler
         db = new DBHandler(this);
