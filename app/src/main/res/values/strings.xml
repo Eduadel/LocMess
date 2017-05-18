@@ -43,4 +43,6 @@
     <string name="wifi_direct">Wifi Direct</string>
     <string name="title_activity_file_browser">WiFi Direct File Transfer</string>
     <string name="title_activity_client">WiFi Direct File Transfer</string>
+    <string name="port">10001</string>
+    <string name="title">New Message Received!</string>
 </resources>
