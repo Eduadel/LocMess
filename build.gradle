@@ -23,3 +23,9 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task publishDrivers (dependsOn: [':Termite-Cli-CDriver-AVD:publish',
+                                 ':Termite-Cli-CDriver-Genymotion:publish',
+                                 ':Termite-Cli-CDriver-CloudStack:publish']) {
+    description 'Copies the jars of connector drivers to the termite cli.'
+}
