@@ -92,6 +92,7 @@ public class MessagesFragment extends Fragment {
             }
         });
 
+        sendLocalMessages();
         return rootView;
     }
 
@@ -179,6 +180,7 @@ public class MessagesFragment extends Fragment {
     public void onResume(){
         super.onResume();
         atualizeList();
+        sendLocalMessages();
     }
 
     //Atualize the ListView with the messages from the sent and received lists
