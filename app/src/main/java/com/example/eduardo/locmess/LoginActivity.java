@@ -15,8 +15,9 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
+    public static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private static final String SERVER_ADDRESS = "http://10.0.2.2:8000/getUserInfo?";
     // session manager
     SessionManager session;
     Button _loginButton;
@@ -24,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText _passwordText;
     TextView _signupLink;
     DBHandler db = new DBHandler(this);
-    private ProgressDialog pDialog;
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(true);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+        progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
@@ -80,11 +81,16 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: Implement your own authentication logic here.
 
-        new android.os.Handler().postDelayed(
+        // send request to web server
+        WebServiceHandler webHandler = new WebServiceHandler(this);
+        webHandler.sendRequest(SERVER_ADDRESS + "email=" + email.toLowerCase() + "&password=" + password);
+
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
                         // check if the Stored password matches with  Password entered by user
+
                         if(db.getUser(email, password))
                         {
                             // fetch data from db
@@ -102,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
 
 

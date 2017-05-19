@@ -29,14 +29,16 @@ public class EditPasswordActivity extends AppCompatActivity {
         // check user login
         session.checkLogin();
 
+        WebServiceHandler webHandler = new WebServiceHandler(this);
+
         // get old password
-        EditText oldPassField = (EditText) findViewById(R.id.old_password);
+        /*EditText oldPassField = (EditText) findViewById(R.id.old_password);
 
         String oldPassword = oldPassField.getText().toString();
 
-        // call database and check old password
-        // TODO
-
+        // call webserver and check old password
+        webHandler.sendRequest(SERVER_ADDRESS + "email=" + session.getUserDetails().get(SessionManager.KEY_EMAIL) + "&password=" + oldPassword);
+        */
         // get new password
         EditText newPassField = (EditText) findViewById(R.id.new_password);
         EditText repeatedNewPassField = (EditText) findViewById(R.id.repeat_new_password);
@@ -61,8 +63,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         }
 
         // send request to web server
-        WebServiceHandler webHandler = new WebServiceHandler(getApplicationContext());
-        webHandler.sendRequest(SERVER_ADDRESS + "&email=" + session.getUserDetails().get(SessionManager.KEY_EMAIL) + "&password=" + newPassword);
+        webHandler.sendRequest(SERVER_ADDRESS + "email=" + session.getUserDetails().get(SessionManager.KEY_EMAIL) + "&password=" + newPassword);
 
         // display success message
         Toast.makeText(getApplicationContext(), "Changes saved successfully", Toast.LENGTH_SHORT).show();

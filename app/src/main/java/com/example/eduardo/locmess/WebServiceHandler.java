@@ -31,7 +31,14 @@ public class WebServiceHandler {
                         try {
                             response = response.getJSONObject("resp");
                             String status = response.getString("status");
-                            Log.d(TAG, "Request '" + url + "' ended with status: '" + status + "'.");
+                            Log.d(TAG, "Request: '" + url + "' ended with status: '" + status + "'.");
+
+                            // yes, thor was here
+                            if (context instanceof LoginActivity) {
+                                checkLogin(response);
+                            } else if(context instanceof SignupActivity) {
+                                checkSignUp(response);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -43,5 +50,35 @@ public class WebServiceHandler {
                     }
                 });
         Volley.newRequestQueue(context).add(jsonRequest);
+    }
+
+    // check user login
+    private void checkLogin(JSONObject json) throws JSONException {
+        LoginActivity activity = (LoginActivity) context;
+        activity.progressDialog.dismiss();
+
+        if (!json.getString("username").isEmpty()
+                && !json.getString("email").isEmpty()
+                && !json.getString("password").isEmpty()) {
+
+            // create session for this user
+            activity.session.createLoginSession(json.getString("username"), json.getString("email"));
+
+            activity.onLoginSuccess();
+        } else {
+            activity.onLoginFailed();
+        }
+    }
+
+    // check user sign up
+    private void checkSignUp(JSONObject json) throws JSONException {
+        SignupActivity activity = (SignupActivity) context;
+        activity.progressDialog.dismiss();
+
+        if ("OK".equals(json.getString("status"))) {
+            activity.onSignupSuccess();
+        } else {
+            activity.onSignupFailed();
+        }
     }
 }

@@ -12,13 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     private static final String SERVER_ADDRESS = "http://10.0.2.2:8000/reg?";
@@ -29,7 +22,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText _passwordText;
     TextView _loginLink;
     DBHandler db = new DBHandler(this);
-    private ProgressDialog pDialog;
+    public ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,19 +68,19 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+        progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        new android.os.Handler().postDelayed(
+        // send request to web server
+        WebServiceHandler webHandler = new WebServiceHandler(this);
+        webHandler.sendRequest(SERVER_ADDRESS + "name=" + name + "&email=" + email.toLowerCase() + "&password=" + password);
+
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // send request to web server
-                        WebServiceHandler webHandler = new WebServiceHandler(getApplicationContext());
-                        webHandler.sendRequest(SERVER_ADDRESS + "name=" + name + "&email=" + email + "&password=" + password);
-
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
                         if(db.addUser(name,password,email)) {
@@ -100,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
 
     public void onSignupSuccess() {
