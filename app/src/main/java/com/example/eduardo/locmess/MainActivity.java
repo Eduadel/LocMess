@@ -34,6 +34,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean mBound = false;
     private static SimWifiP2pSocketServer mSrvSocket = null;
     private static SimWifiP2pSocket mCliSocket = null;
+    private static boolean sending = false;
     
     private WifiP2pManager wifiManager;
     private WifiP2pManager.Channel wifichannel;
@@ -255,16 +257,19 @@ public class MainActivity extends AppCompatActivity implements
     }
     
     public void termiteSender(PinMessage p) {
-        mManager.requestGroupInfo(mChannel, MainActivity.this);
-        for(String st : peersStr){
-            Log.i(TAG, st);
-            new OutgoingCommTask().executeOnExecutor(
+        if (sending == false) {
+            sending = true;
+            mManager.requestGroupInfo(mChannel, MainActivity.this);
+            for (String st : peersStr) {
+                Log.i(TAG, st);
+                new OutgoingCommTask().executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         st);
-            new SendCommTask().executeOnExecutor(
+                new SendCommTask().executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         p);
-            Log.i(TAG, "finished for loop");
+            }
+            sending = false;
         }
     }
 
@@ -307,40 +312,68 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected void onProgressUpdate(PinMessage... values) {
             Log.i(TAG, "Message Received");
-            PinMessage received_message = values[0];
-
-            //Show Alert to user
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom);
-            builder.setTitle(getResources().getString(R.string.title));
-            builder.setMessage(values[0].getContent());
-            builder.show();
-            //Add Message to cache
-            addMessage(values[0]);
+            checkMessage(values[0]);
 
         }
     }
 
-    private void addMessage(PinMessage value){
+   //Checks message validity: In time interval and has not been received yet
+   private void checkMessage(PinMessage value) {
+        boolean res = false;
+        Date todayDate = new Date();
+
+        if (todayDate.after(value.getStartDate()) && todayDate.before(value.getEndDate())){
+            res = addMessage(value);
+        }
+
+        if (res==true){
+            //Show Alert to user
+            Log.i(TAG, "Showing alert dialog");
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom);
+            builder.setTitle(getResources().getString(R.string.title));
+            builder.setMessage(value.getContent());
+            builder.show();
+        }
+    }
+
+    //Adds received message to cachand checks for duplicates
+    private boolean addMessage(PinMessage value){
         String key = "received";
+        int in = 0;
+        boolean result = false;
         try {
             // Retrieve the list from internal storage
             List<PinMessage> entries = (List<PinMessage>) InternalStorage.readObject(this, key);
 
-            //Add message to array
-            entries.add(value);
+            //Check for repeated messages
+            for (PinMessage p : entries){
+                if (p.getID()==value.getID()){
+                    in++;
+                }
+            }
 
-            //Delete previous copy
-            String path = getFilesDir().getAbsolutePath() + "/" + key;
-            File file = new File(path);
-            file.delete();
+            if (in==0) {
+                //Add message to array
+                entries.add(value);
 
-            //Save updated version to cache
-            InternalStorage.writeObject(this, key, entries);
+                //Delete previous copy
+                String path = getFilesDir().getAbsolutePath() + "/" + key;
+                File file = new File(path);
+                file.delete();
+
+                //Save updated version to cache
+                InternalStorage.writeObject(this, key, entries);
+                Log.i(TAG, "Message added to cache");
+
+                result = true;
+            }else {Log.i(TAG, "Message has already been recived");}
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         } catch (ClassNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
+
+        return result;
     }
 
     public class OutgoingCommTask extends AsyncTask<String, Void, String> {
