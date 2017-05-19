@@ -38,7 +38,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:10.2.4'
     compile(name:'Termite-WifiP2P-API', ext:'aar')
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
-    compile(name:'Termite-WifiP2P-API', ext:'aar')
     testCompile 'junit:junit:4.12'
 }
 
