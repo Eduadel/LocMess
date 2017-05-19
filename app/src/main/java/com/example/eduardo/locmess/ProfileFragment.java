@@ -14,6 +14,8 @@ import java.util.HashMap;
 
 public class ProfileFragment extends Fragment {
 
+    private static final String SERVER_ADDRESS = "http://10.0.2.2:8000/updPass?";
+
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
@@ -98,7 +100,7 @@ public class ProfileFragment extends Fragment {
                     emailField.setError(null);
                 }*/
 
-                // call database
+                // send request to web server
                 // TODO
 
                 // display success message

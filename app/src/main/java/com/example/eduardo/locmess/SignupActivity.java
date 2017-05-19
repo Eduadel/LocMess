@@ -84,8 +84,7 @@ public class SignupActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-
-                        // send request to webserver
+                        // send request to web server
                         WebServiceHandler webHandler = new WebServiceHandler(getApplicationContext());
                         webHandler.sendRequest(SERVER_ADDRESS + "name=" + name + "&email=" + email + "&password=" + password);
 

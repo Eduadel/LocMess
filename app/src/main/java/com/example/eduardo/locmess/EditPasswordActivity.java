@@ -9,6 +9,7 @@ import android.widget.Toast;
 public class EditPasswordActivity extends AppCompatActivity {
 
     public final static String ACTION_BAR_TITLE = "Change Password";
+    private static final String SERVER_ADDRESS = "http://10.0.2.2:8000/updPass?";
 
     SessionManager session;
 
@@ -59,8 +60,9 @@ public class EditPasswordActivity extends AppCompatActivity {
             repeatedNewPassField.setError(null);
         }
 
-        // call databe
-        // TODO
+        // send request to web server
+        WebServiceHandler webHandler = new WebServiceHandler(getApplicationContext());
+        webHandler.sendRequest(SERVER_ADDRESS + "&email=" + session.getUserDetails().get(SessionManager.KEY_EMAIL) + "&password=" + newPassword);
 
         // display success message
         Toast.makeText(getApplicationContext(), "Changes saved successfully", Toast.LENGTH_SHORT).show();
