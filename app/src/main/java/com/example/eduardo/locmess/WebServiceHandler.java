@@ -38,6 +38,8 @@ public class WebServiceHandler {
                                 checkLogin(response);
                             } else if(context instanceof SignupActivity) {
                                 checkSignUp(response);
+                            } else if (context instanceof ListInterestsActivity) {
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -80,5 +82,11 @@ public class WebServiceHandler {
         } else {
             activity.onSignupFailed();
         }
+    }
+
+    // update interests
+    private void updateInterests(JSONObject json) throws JSONException {
+        ListInterestsActivity activity = (ListInterestsActivity) context;
+
     }
 }

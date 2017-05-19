@@ -12,10 +12,9 @@ import android.widget.SimpleCursorAdapter;
 
 import com.github.clans.fab.FloatingActionButton;
 
-public class ListInterestsActivity extends AppCompatActivity {
+import java.util.HashMap;
 
-    // TODO DELETE
-    String[] testList = {"Club", "Job"};
+public class ListInterestsActivity extends AppCompatActivity {
 
     public final static String KEY_EXTRA_INFO_ID = "KEY_EXTRA_INFO_ID";
     public final static String KEY_EXTRA_INFO_KEY = "KEY_EXTRA_INFO_KEY";
@@ -94,5 +93,10 @@ public class ListInterestsActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    // update interests
+    public void updateInterests(HashMap<String, String> interests) {
+
     }
 }
