@@ -95,8 +95,8 @@ public class ListInterestsActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    // update interests
+    // insert interests received from web server into sqlite db
     public void updateInterests(HashMap<String, String> interests) {
-
+        // TODO
     }
 }

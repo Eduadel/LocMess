@@ -88,5 +88,7 @@ public class WebServiceHandler {
     private void updateInterests(JSONObject json) throws JSONException {
         ListInterestsActivity activity = (ListInterestsActivity) context;
 
+        // TODO
+        //activity.updateInterests();
     }
 }
