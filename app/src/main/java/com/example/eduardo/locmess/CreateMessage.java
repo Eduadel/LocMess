@@ -3,6 +3,7 @@ package com.example.eduardo.locmess;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
@@ -24,22 +25,27 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.eduardo.locmess.DBHandler.KEY_LOCAL;
+
 public class CreateMessage extends AppCompatActivity {
     private static final String TAG = "CreateMessage";
     private PinMessage msg = new PinMessage();
-    private String[] local_list = {"Almada", "Lisboa", "Oeiras", "Cacém", "Loures", "Setúbal", "Corroios", "Seixal", "Costa da Caparica", "Sesimbra", "Faro", "Coimbra", "Leiria"};
+    ArrayList<String> local_list = new ArrayList<String>();
     private LinearLayout mLayout;
     private Spinner spinner;
+    private int start_date;
+
+    DBHandler db = new DBHandler(this);
     DateFormat formatDateTime = DateFormat.getDateTimeInstance(DateFormat.DATE_FIELD, DateFormat.SHORT);
     Calendar dateTime = Calendar.getInstance();
     Calendar dateTimeEnd = Calendar.getInstance();
     Button date_start, hour_start, date_end, hour_end;
     TextView show_date_start, show_date_end;
-    private int start_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,7 @@ public class CreateMessage extends AppCompatActivity {
         setTitle("New Message");    //View title on top
 
         //Location Selection
+        putAllLocations();
         addLocationSelectionSpinner();
 
         //List Selection
@@ -282,6 +289,17 @@ public class CreateMessage extends AppCompatActivity {
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, local_list); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
+    }
+
+    public void putAllLocations(){
+        Cursor c = db.getAllLocals();
+
+        c.moveToFirst();
+        while(!c.isAfterLast()) {
+            local_list.add(c.getString(c.getColumnIndex(KEY_LOCAL)));
+            c.moveToNext();
+        }
+        c.close();
     }
 
     public String getLocation(){
