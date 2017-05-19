@@ -147,7 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
     // Getting All locals
     public Cursor getAllLocals() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery( "SELECT " +KEY_ID + "," + KEY_LOCAL + " FROM " + TABLE_LOCAL, null );
+        Cursor res = db.rawQuery( "SELECT " +KEY_ID + "," + KEY_LOCAL + "," + KEY_GPS + " FROM " + TABLE_LOCAL, null );
         return res;
     }
 
