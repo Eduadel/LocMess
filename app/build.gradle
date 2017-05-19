@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.eduardo.locmess"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -37,5 +37,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.4'
     compile 'com.google.android.gms:play-services-plus:10.2.4'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile(name:'Termite-WifiP2P-API', ext:'aar')
     testCompile 'junit:junit:4.12'
 }

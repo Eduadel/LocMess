@@ -87,16 +87,16 @@ public class ProfileFragment extends Fragment {
                     usernameField.setError(null);
                 }
 
-                // get new username
-                String newEmail = emailField.getText().toString();
+                // get new email
+                //String newEmail = emailField.getText().toString();
 
                 // check email
-                if (newEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                /*if (newEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
                     emailField.setError("enter a valid email address");
                     return;
                 } else {
                     emailField.setError(null);
-                }
+                }*/
 
                 // call database
                 // TODO
